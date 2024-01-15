@@ -1,1 +1,1 @@
-# TitanicPredictionProject
+# Titanic Survivors Prediction Project
