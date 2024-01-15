@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Prediction Form</title>
+</head>
+<body>
+
+    <h2>Model Prediction Form</h2>
+
+    <form id="predictionForm">
+        <label for="cl">Class:</label>
+        <input type="text" id="cl" name="cl" required><br>
+
+        <label for="age">Age:</label>
+        <input type="text" id="age" name="age" required><br>
+
+        <label for="sib">Siblings:</label>
+        <input type="text" id="sib" name="sib" required><br>
+
+        <label for="parch">Parents/Children:</label>
+        <input type="text" id="parch" name="parch" required><br>
+
+        <label for="fare">Fare:</label>
+        <input type="text" id="fare" name="fare" required><br>
+
+        <label for="female">Female:</label>
+        <input type="text" id="female" name="female" required><br>
+
+        <label for="male">Male:</label>
+        <input type="text" id="male" name="male" required><br>
+
+        <button type="button" onclick="predict()">Submit Prediction</button>
+    </form>
+
+    <div id="predictionResult"></div>
+
+    <script>
+        async function predict() {
+            const cl = document.getElementById('cl').value;
+            const age = document.getElementById('age').value;
+            const sib = document.getElementById('sib').value;
+            const parch = document.getElementById('parch').value;
+            const fare = document.getElementById('fare').value;
+            const female = document.getElementById('female').value;
+            const male = document.getElementById('male').value;
+    
+            const payload = {
+                'cl': parseFloat(cl),
+                'age': parseFloat(age),
+                'sib': parseFloat(sib),
+                'parch': parseFloat(parch),
+                'fare': parseFloat(fare),
+                'female': parseFloat(female),
+                'male': parseFloat(male),
+            };
+    
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    
+                    throw new Error(`Error predicting: ${response.statusText}`);
+                }
+                
+
+                const data = await response.json();
+                // Handle the response from the backend
+                console.log(data);
+
+                const predictionResultElement = document.getElementById('predictionResult');
+
+                if (data.prediction !== undefined) {
+                    predictionResultElement.innerHTML = `Prediction: ${data.prediction}`;
+                } else {
+                    predictionResultElement.innerHTML = 'Prediction not available.';
+                }
+            } catch (error) {
+                console.error('Error predicting:', error);
+                document.getElementById('predictionResult').innerHTML = 'Error predicting. Check the console for details.';
+            }
+        } 
+    </script>
+
+</body>
+</html>
