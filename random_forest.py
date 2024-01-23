@@ -31,4 +31,5 @@ class RandomForest:
     def predict(self,X):
        predictions = np.array([tree.predict(X) for tree in self.trees])
        tree_preds = np.swapaxes(predictions,0,1)
-       return np.array([self._most_common_label(pred) for pred in tree_preds])
+       #return np.array([self._most_common_label(pred) for pred in tree_preds])
+       return np.array([(np.sum(pred == 1) / self.n_trees)*100 for pred in tree_preds])
